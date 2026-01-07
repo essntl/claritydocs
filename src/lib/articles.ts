@@ -2,8 +2,10 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { remark } from "remark";
-import html from "remark-html";
 import gfm from "remark-gfm";
+import remarkRehype from "remark-rehype";
+import rehypeSanitize from "rehype-sanitize";
+import rehypeStringify from "rehype-stringify";
 
 const articlesDirectory = path.join(process.cwd(), "articles");
 
@@ -57,7 +59,12 @@ export async function getArticleBySlug(
   const fileContents = fs.readFileSync(filePath, "utf8");
   const { data, content } = matter(fileContents);
 
-  const processedContent = await remark().use(gfm).use(html).process(content);
+  const processedContent = await remark()
+    .use(gfm)
+    .use(remarkRehype)
+    .use(rehypeSanitize)
+    .use(rehypeStringify)
+    .process(content);
   const htmlContent = processedContent.toString();
 
   // Extract title from frontmatter or first heading
