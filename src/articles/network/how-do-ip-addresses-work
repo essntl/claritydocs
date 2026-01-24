@@ -1,0 +1,27 @@
+# How do IP Addresses Work?
+
+## Basic
+
+An IP address is a unique identifier assigned to a device that's connected to a network. Think of it as a home address but for your device, and each device has its own home address where it receives mail (data). This is how the internet fundamentally works. We use IP addresses to determine where to send data and be sure that it's going to the correct place. For example, when we visit YouTube we connect to the website by sending a request to YouTube's IP address. It sees that our computer/phone has requested data so it looks at the request and sends us our feed, recommendations or videos we watch to our IP address. Through these exchanges we stay connected and get access to the services we use daily.
+
+IP addresses can look different depending on their version, yes there are different versions! The current most common IP address is IPv4 and it consists of 4 numbers separated by dots.
+```
+192.168.1.1
+```
+
+IPv4 has 4.3 billion addresses total and we have actually "run out" of addresses. Ever since the internet became big it was inevitable that we would fill up all the addresses. So how does the internet still function if we are out?
+
+The band-aid to that problem was NAT (Network address translation). Instead of giving each device its own public address, we now have one shared public address for all devices in a singular network. To put it into perspective, we went from individual house addresses to an apartment building with one address and a shared mail box marked for each apartment. So there is one public address the outside devices can reach your network on (Apartment block address), and there is a local IP address just for the devices on your network (Apartment numbers). This is where the name Network address translation comes from. The router handles the process of connecting you to other devices using the public IP address, when it gets data sent to it, it has to look at where the data is going and rewrite the address to point to the right apartment (device) inside your network. You can compare it to attaching a label to which device its supposed to go to inside the network.
+
+Despite this fix, it's still not enough because once we reach 4.3 billion networks (households/offices) we will run out again. This is why we have come up with a new version of the IP protocol called IPv6. In this version there are 340 undecillion addresses. That's enough to give every grain of sand on earth millions of addresses each. An IPv6 address looks like this
+```
+2001:0db8:85a3:0000:0000:8a2e:0370:7334
+```
+
+We are currently in the middle of switching over to IPv6 but as long as IPv4 is usable it will be the majority preferred option due to it being simpler to remember and work with, and because upgrading all of the internet's infrastructure is expensive and complicated.
+
+You might be thinking, "What happened to IPv5?". IPv5 was a thing, we didn't just skip over it. It was experimental and never meant for public use, it went by the name "Internet Stream Protocol (ST)" As you could tell by the name it was designed for streaming voice and video. This might seem useful but we have created and adopted better protocols like UDP for real-time streaming and TCP for reliable data transfer that work on top of IPv4 we know today. IPv5 was used back in the 80s where streaming wasn't needed at scale.
+
+## Advanced
+
+*[To be completed]*
