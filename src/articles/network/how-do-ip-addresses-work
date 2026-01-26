@@ -24,4 +24,45 @@ You might be thinking, "What happened to IPv5?". IPv5 was a thing, we didn't jus
 
 ## Advanced
 
-*[To be completed]*
+# IP Addresses: IPv4 and IPv6
+
+An IP address is a device network identifier which allows devices to find and connect to each other remotely. There are different versions of IP addresses, the most widely used is IPv4. IPv4 consists of four up to three digit numbers separated by dots (e.g. 192.168.1.1). This is how it looks to us but to computers an IPv4 address is actually a 32-bit binary number consisting of ones and zeros. The example for an IPv4 address earlier is just a human-friendly representation of this:
+
+```
+11000000.10101000.00000001.00000001
+```
+
+Each section between the dots is 8 bits, one 8 bit section is called an octet (from Latin "octo" meaning eight). We have 4 octets of 8 bits each, this results in 4 × 8 = 32 bits total. Since each octet is 8 bits it can only represent values between 0 and 255, thats because the minimum value is 00000000 which equals to zero while the highest is 11111111 which is 255. In binary the position of the number determines it's value, next position is double of the previous position Here is an example for an 8 bit value:
+
+```
+Position:  7    6    5    4    3    2    1    0
+Value:    128   64   32   16   8    4    2    1
+```
+
+So `11111111` = 128 + 64 + 32 + 16 + 8 + 4 + 2 + 1 = 255
+
+We can use the previous IP as an example. The first octet (192) is 128 + 64 = 11000000. We can see that matches with the full translation above and the binary position table we have. This is why you will never see an IPv4 address with a number higher than 255 because anything above that is physically impossible with only 8 bits.
+
+With this we can calculate how many possible IPv4 addresses there are:
+
+```
+2^32 = 4,294,967,296 addresses
+```
+
+There are nearly 4.3 billion addresses in total.
+
+As mentioned at the start there are different versions of IP addresses. The new and improved IPv6 aims to improve the current IP system by solving the biggest issue with IPv4, and it's that IPv4 doesn't have enough addresses. Compared to IPv4 which is a 32 bit number, IPv6 is a 128 bit number. It is so long that it becomes impractical to write in binary so we use hexadecimal (base-16). The hex digits are 1-9 and a-f where (a=10, b=11, c=12, d=13, e=14, f=15). An IPv6 address is divided into 8 groups of 16 bits separated by colons, and each group is represented by 4 hexadecimal characters.
+
+```
+2001:0db8:85a3:0000:0000:8a2e:0370:7334
+```
+
+Having 128-bits allows us to have many more addresses compared to IPv4, and that would be putting it lightly. With IPv6 we can assign millions of IP addresses to each sand grain on earth.
+
+```
+2^128 = 340,282,366,920,938,463,463,374,607,431,768,211,456
+```
+
+That's roughly 340 undecillion possible IP addresses.
+
+# This article is still WIP
