@@ -65,4 +65,187 @@ Having 128-bits allows us to have many more addresses compared to IPv4, and that
 
 That's roughly 340 undecillion possible IP addresses.
 
-# This article is still WIP
+Remembering and writing full IPv6 addresses is both hard and inefficient. This is why there are shortening rules to simplify them.
+
+## Shortening Rules
+
+### Rule 1: Leading zeros in each group can be ignored
+
+```
+2001:0db8:0042:0000:0000:8a2e:0370:7334
+```
+becomes
+```
+2001:db8:42:0:0:8a2e:370:7334
+```
+
+### Rule 2: One consecutive sequence of all-zero groups can be replaced with `::`
+
+```
+2001:db8:42:0:0:8a2e:370:7334
+```
+becomes
+```
+2001:db8:42::8a2e:370:7334
+```
+
+**Important:** You can only use `::` once per address, otherwise it would be hard to know how many zero groups each `::` represents.
+
+## Loopback Address Example
+
+**Full address:**
+```
+0000:0000:0000:0000:0000:0000:0000:0001
+```
+
+**With shortening rules applied:**
+```
+::1
+```
+
+A loopback address is an address for a device to talk to itself. Same as localhost, which is just a hostname for a loopback address. Used for local services on one machine which aren't supposed to leave that machine.
+
+---
+
+# Subnetting and Why It Exists
+
+## The Problem with Early IP Address Classes
+
+In the early days of the internet, IP addresses were assigned in fixed "classes":
+
+- **Class A:** First 8 bits for the network, remaining 24 for hosts (16.7 million addresses per network)
+- **Class B:** First 16 bits for the network, remaining 16 for hosts (65,536 addresses per network)
+- **Class C:** First 24 bits for network, remaining 8 bits for hosts (256 addresses per network)
+
+The issue with this system is that it was incredibly wasteful. If a company needed 500 addresses, they would have to get a Class B network with 65.5 thousand addresses where most would go to waste.
+
+**Subnetting solves this** by letting us divide networks at any bit boundary, not just at 8, 16, or 24 bits.
+
+## Understanding IP Address Structure
+
+Every IP address has two parts:
+
+- **Network portion** - Identifies which network the device belongs to (Comparable to a street name)
+- **Host portion** - Identifies the specific device inside that network (Like a house number)
+
+## Subnet Masks
+
+A subnet mask tells us where the network portion ends and where the host portion begins.
+
+It's a 32-bit number that "masks" the network portion of an IP address. It's written in the same way as an IP address:
+
+**Decimal:**
+```
+255.255.255.0
+```
+
+**Binary:**
+```
+11111111.11111111.11111111.00000000
+```
+
+The rule here is simple: **1s mark the network portion while 0s mark the host portion.**
+
+So a mask of `255.255.255.0` tells us that the first 24 bits are the network, and the last 8 bits are for hosts.
+
+## CIDR Notation
+
+While traditional subnet masks are easy to remember, there is a more convenient and shorter way of doing it. It's called **CIDR Notation**.
+
+Instead of writing:
+```
+192.168.1.0 with subnet mask 255.255.255.0
+```
+
+We can write:
+```
+192.168.1.0/24
+```
+
+The `/24` indicates that the first 24 bits of the IP are the network portion. It's the same as if we just count the 1s in the subnet mask (255 = eight 1s).
+
+### Common CIDR Notations
+
+| CIDR | Subnet Mask | Total Addresses | Usable Hosts | Common Use |
+|------|-------------|-----------------|--------------|------------|
+| /8 | 255.0.0.0 | 16,777,216 | 16,777,214 | Massive networks (10.0.0.0/8 for private) |
+| /12 | 255.240.0.0 | 1,048,576 | 1,048,574 | Large private (172.16.0.0/12) |
+| /16 | 255.255.0.0 | 65,536 | 65,534 | Large organizations, private networks |
+| /20 | 255.255.240.0 | 4,096 | 4,094 | Medium organizations |
+| /21 | 255.255.248.0 | 2,048 | 2,046 | Medium organizations |
+| /22 | 255.255.252.0 | 1,024 | 1,022 | Medium organizations |
+| /23 | 255.255.254.0 | 512 | 510 | Small-medium networks |
+| /24 | 255.255.255.0 | 256 | 254 | Home networks, small offices |
+| /25 | 255.255.255.128 | 128 | 126 | Small subnets |
+| /26 | 255.255.255.192 | 64 | 62 | Small subnets |
+| /27 | 255.255.255.224 | 32 | 30 | Small subnets |
+| /28 | 255.255.255.240 | 16 | 14 | Very small subnets |
+
+## Why Subnetting Matters
+
+Subnets are important at scale while it's mostly irrelevant in the home network sense. At bigger scale, subnets solve a few big issues.
+
+### Problem 1: Broadcast Traffic
+
+Some of the traffic in every network consists of broadcasts. Broadcasts go to each device on the subnet. Each device receives and processes these packets even if the broadcast wasn't meant for them.
+
+**ARP (Address Resolution Protocol)** is the main culprit of broadcasts. When one device wants to communicate with another, it has to know its MAC address (Hardware address of the network card). It finds it by broadcasting to everyone:
+
+> "Hey everyone! Who has IP 192.168.1.45? Tell me your MAC address!"
+
+Every device on the subnet receives this message and has to process it. Only the device with that IP responds but everyone had to listen and process the packet.
+
+Now imagine this at scale in a network of let's say, 30 thousand devices with each device doing this type of broadcast every few minutes along with other broadcasts. It quickly becomes a performance hazard. By scaling down and separating devices into subnets, now only 250 machines receive the broadcasts which solves our issue.
+
+### Problem 2: Security and Isolation
+
+Traffic in a subnet flows freely; devices can talk directly to each other. Traffic between subnets must go through a router. Routers can have firewall rules and access control lists which would limit traffic.
+
+In an example scenario, let's say you have:
+
+- Employee workstations
+- Security cameras
+- Guest WiFi
+- Servers with sensitive data
+
+If everything is on one big subnet (10.0.0.0/16), any device can communicate with any other device directly. A compromised security camera could try to access your database or a guest laptop could probe your employee workstations.
+
+**With subnetting:**
+```
+10.0.1.0/24  →  Employee workstations
+10.0.2.0/24  →  Security cameras
+10.0.3.0/24  →  Guest WiFi
+10.0.4.0/24  →  Servers
+```
+
+Now you can set rules on the router:
+
+- Guest WiFi can ONLY reach the internet, nothing internal
+- Security cameras can only talk to the recording server
+- Only employee workstations can access the database server
+
+A compromised camera literally cannot reach the database server because the router blocks it.
+
+### Problem 3: Fault Isolation
+
+Network problems tend to stay contained within a subnet.
+
+If there is a misconfigured device, malware, network loop or anything else which could cause issues, it only affects that subnet. Other subnets continue working normally.
+
+With one giant subnet, one malfunctioning device can take down your entire network.
+
+### Problem 4: Organizational Clarity
+
+It makes management easier.
+
+```
+10.0.1.0/24  →  Building A, Floor 1
+10.0.2.0/24  →  Building A, Floor 2
+10.0.10.0/24 →  Building B, Floor 1
+```
+
+When something breaks you immediately know where to look. When you see traffic from 10.0.2.x, you know it's from Floor 2.
+
+### Problem 5: Efficient Address Allocation
+
+As mentioned at the start, by allocating only the amount of addresses we actually need, we avoid the waste of the old class-based system.
