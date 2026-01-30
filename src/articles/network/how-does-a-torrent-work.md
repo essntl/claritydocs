@@ -1,3 +1,11 @@
+### Info unrelated to the article.
+
+There is a separation into two levels of complexity. One is Overview/Basic and the second is Deep Dive/Advanced.
+
+While Basic mode will aim to provide the general idea of how things work, the Advanced mode will give the details and the why they work like they do.
+
+Both will be explained with analogies and in simple terms for beginners to understand. That is the core principle of the project.
+
 # What is a torrent and how does it work?
 
 ## Basic

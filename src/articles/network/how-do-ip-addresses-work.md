@@ -1,15 +1,10 @@
-# IP Addresses
+### Info unrelated to the article.
 
-This article has two sections:
+There is a separation into two levels of complexity. One is Overview/Basic and the second is Deep Dive/Advanced.
 
-- **Basic** - Understand how it works with analogies and simple explanations
-- **Advanced** - Technical details: protocols, algorithms, and how it actually works
+While Basic mode will aim to provide the general idea of how things work, the Advanced mode will give the details and the why they work like they do.
 
-Start with Basic, then continue to Advanced if you want deeper technical knowledge.
-
-*Part of ClarityDocs - an open-source project teaching technical concepts with beginner-first explanations.*
-
----
+Both will be explained with analogies and in simple terms for beginners to understand. That is the core principle of the project.
 
 ## Basic
 
